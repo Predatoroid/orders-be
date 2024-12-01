@@ -5,15 +5,17 @@ namespace Orders.Services;
 
 public class DiscountService : IDiscountService
 {
-    private readonly IEnumerable<IDiscountStrategy> _strategies = new List<IDiscountStrategy>
+    private readonly IEnumerable<IDiscountStrategy> _strategies;
+    
+    public DiscountService(IEnumerable<IDiscountStrategy> strategies)
     {
-        new PriceListDiscount(),
-        new PromotionDiscount(),
-        new CouponDiscount()
-    };
+        _strategies = strategies.OrderBy(strategy => strategy.Order);
+    }
 
     public IEnumerable<DiscountResult> ApplyDiscounts(Order order)
     {
+        ArgumentNullException.ThrowIfNull(order);
+        
         var results = new List<DiscountResult>();
         var currentOrder = order;
         

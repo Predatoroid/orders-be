@@ -1,3 +1,3 @@
 namespace Orders.ViewModels;
 
-public record MoneyVm(string Currency, decimal Value);
+public record struct MoneyVm(string Currency, decimal Value);

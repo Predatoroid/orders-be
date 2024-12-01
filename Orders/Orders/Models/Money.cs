@@ -3,11 +3,35 @@ using Orders.ViewModels;
 
 namespace Orders.Models;
 
-public record Money(CurrencyEnum Currency, decimal Value)
+public readonly record struct Money
 {
-    public MoneyVm ToVm() => new MoneyVm(Currency.ToString(), Value);
+    private readonly CurrencyEnum _currency;
+
+    public CurrencyEnum Currency
+    {
+        get
+        {
+            if (!Enum.IsDefined(_currency))
+            {
+                throw new ArgumentOutOfRangeException(_currency.ToString());
+            }
+            return _currency;
+        }
+    }
     
-    public override string ToString() => $"{Value}:{Currency}";
+    public decimal Value { get; init; }
+    
+    public Money(CurrencyEnum currency, decimal value)
+    {
+        Value = value;
+        _currency = Enum.IsDefined(currency)
+            ? currency
+            : throw new ArgumentOutOfRangeException(currency.ToString());
+    }
+    
+    public MoneyVm ToVm() => new(Currency.ToString(), Value);
+    
+    public override string ToString() => $"{Currency}:{Value}";
 
     public static Money operator +(Money a, Money b)
     {
@@ -43,7 +67,7 @@ public record Money(CurrencyEnum Currency, decimal Value)
     {
         if (a.Currency != b.Currency)
         {
-            throw new ArgumentException("Cannot multiply with different currencies");
+            throw new ArgumentException("Cannot divide with different currencies");
         }
 
         if (decimal.Equals(b.Value, decimal.Zero))

@@ -7,6 +7,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServicesByReflection(this IServiceCollection services, Assembly assembly)
     {
+        ArgumentNullException.ThrowIfNull(assembly);
+        
         // Get all types in the specified assembly
         var types = assembly.GetTypes();
 

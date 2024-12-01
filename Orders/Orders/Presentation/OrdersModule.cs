@@ -15,11 +15,7 @@ public static class OrdersModule
                 Log.Information("Processing order {OrderId}", orderId);
 
                 // Simulate fetching order
-                var order = new Order
-                {
-                    Id = orderId,
-                    Price = new Money(CurrencyEnum.EUR, 340m)
-                };
+                var order = new Order(orderId, new Money(CurrencyEnum.EUR, 340m));
         
                 // Convert to EUR
                 var originalPrice = new Money(order.Price.Currency, order.Price.Value);
