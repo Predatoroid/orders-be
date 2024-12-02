@@ -1,6 +1,6 @@
-namespace Orders.Models;
+namespace Orders.Models.DAO;
 
-public record Customer
+public record CustomerDao
 {
     public int Id { get; set; }
     public string Name { get; set; }

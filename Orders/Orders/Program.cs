@@ -1,8 +1,11 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using Npgsql;
+using Orders.Abstractions;
 using Orders.Extensions;
 using Orders.Presentation;
+using Orders.Repositories;
 using Prometheus;
 using Serilog;
 using Serilog.Sinks.Graylog;
@@ -26,8 +29,12 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-builder.Services.AddScoped<IDbConnection>(sp =>
-    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddScoped<IDbConnection>(sp =>
+//     new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSingleton<IDbConnection>(sp => new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+builder.Services.AddSingleton<ICustomerFieldRepository, CustomerFieldRepository>();
+
 builder.Services.AddServicesByReflection(Assembly.GetExecutingAssembly());
 
 builder.Services.AddEndpointsApiExplorer();
@@ -47,6 +54,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.AddOrdersEndpoints();
+app.AddCustomerEndpoints();
+app.AddCustomerFieldsEndpoints();
 
 app.MapMetrics();
 

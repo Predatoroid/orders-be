@@ -1,39 +1,66 @@
--- Δημιουργία πίνακα για τα πεδία των πελατών (Custom Fields)
-CREATE TABLE CustomerCustomFields (
-    Id INT PRIMARY KEY IDENTITY,
-    CustomerId INT NOT NULL,
-    FieldName NVARCHAR(255) NOT NULL,
-    FieldType NVARCHAR(50) NOT NULL, -- 'textbox' ή 'dropdown'
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    ModifiedAt DATETIME
+CREATE TABLE Customers (
+    Id SERIAL PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Δημιουργία πίνακα για τις επιλογές dropdown
-CREATE TABLE CustomFieldOptions (
-    Id INT PRIMARY KEY IDENTITY,
-    CustomFieldId INT FOREIGN KEY REFERENCES CustomerCustomFields(Id),
-    OptionValue NVARCHAR(255) NOT NULL
+CREATE TABLE FieldTypes (
+    Id SERIAL PRIMARY KEY,
+    Description VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ModifiedAt TIMESTAMP NULL
 );
 
--- Δημιουργία πίνακα για την αποθήκευση των τιμών ανά πελάτη
-CREATE TABLE CustomerCustomFieldValues (
-    Id INT PRIMARY KEY IDENTITY,
-    CustomerId INT NOT NULL,
-    CustomFieldId INT NOT NULL,
-    FieldValue NVARCHAR(255) NOT NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
-    FOREIGN KEY (CustomFieldId) REFERENCES CustomerCustomFields(Id)
+CREATE TABLE EntityTypes (
+    Id SERIAL PRIMARY KEY,
+    Description VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ModifiedAt TIMESTAMP NULL
 );
 
--- Δημιουργία πίνακα για την αποθήκευση ιστορικού αλλαγών των πεδίων
-CREATE TABLE CustomFieldChangeHistory (
-    Id INT PRIMARY KEY IDENTITY,
+CREATE TABLE CustomerFields (
+    Id SERIAL PRIMARY KEY,
     CustomerId INT NOT NULL,
-    CustomFieldId INT NOT NULL,
-    OldValue NVARCHAR(255),
-    NewValue NVARCHAR(255),
-    ChangedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
-    FOREIGN KEY (CustomFieldId) REFERENCES CustomerCustomFields(Id)
+    FieldTypeId INT NOT NULL,
+    Description VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ModifiedAt TIMESTAMP NULL,
+	FOREIGN KEY (CustomerId) REFERENCES Customers(Id),
+	FOREIGN KEY (FieldTypeId) REFERENCES FieldTypes(Id)
 );
+
+CREATE TABLE FieldOptions (
+    Id SERIAL PRIMARY KEY,
+    CustomerFieldId INT REFERENCES CustomerFields(Id),
+    OptionValue VARCHAR(255) NOT NULL,
+	CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	ModifiedAt TIMESTAMP NULL
+);
+
+CREATE TABLE CustomerFieldValues (
+    Id SERIAL PRIMARY KEY,
+    CustomerFieldId INT NOT NULL,
+    FieldOptionId INT NULL,
+    FieldValue VARCHAR(255) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ModifiedAt TIMESTAMP NULL,
+    FOREIGN KEY (CustomerFieldId) REFERENCES CustomerFields(Id),
+    FOREIGN KEY (FieldOptionId) REFERENCES FieldOptions(Id)
+);
+
+CREATE TABLE CustomerFieldHistory (
+    Id SERIAL PRIMARY KEY,ieldId INT NOT NULL,
+	CustomerFieldId INT NOT NULL,
+    OldValue VARCHAR(255),
+    NewValue VARCHAR(255),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerFieldId) REFERENCES CustomerFields(Id)
+);
+
+INSERT INTO FieldTypes(Description) VALUES ('Textbox');
+INSERT INTO FieldTypes(Description) VALUES ('Dropdown');
+
+INSERT INTO EntityTypes(Description) VALUES ('CustomerFields');
+INSERT INTO EntityTypes(Description) VALUES ('FieldOptions');
+
+
