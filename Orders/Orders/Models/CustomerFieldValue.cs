@@ -1,9 +1,9 @@
 namespace Orders.Models;
 
-public record CustomerFieldValue()
+public record CustomerFieldValue
 {
     public int Id { get; set; }
-    public int CustomerId { get; set; }
-    public int CustomFieldId { get; set; }
-    public string Value { get; set; }
+    public int CustomerFieldId { get; set; }
+    public int FieldOptionId { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

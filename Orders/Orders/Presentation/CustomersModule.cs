@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Orders.Abstractions;
+using Orders.DTOs;
 
 namespace Orders.Presentation;
 
@@ -16,16 +18,16 @@ public static class CustomersModule
             .WithName("GetCustomer")
             .WithTags(TagModule);
     }
-    
+
     /// <summary>
     /// Creates a new customer.
     /// </summary>
-    /// <param name="name">The name of the customer.</param>
+    /// <param name="customerDto">The customer details</param>
     /// <param name="customerService">The customer service instance.</param>
     /// <returns>The created customer.</returns>
-    private static async Task<IResult> CreateCustomer(string name, ICustomerService customerService)
+    private static async Task<IResult> CreateCustomer([FromBody] CustomerDto customerDto, ICustomerService customerService)
     {
-        var customerIdResult = await customerService.CreateCustomerAsync(name);
+        var customerIdResult = await customerService.CreateCustomerAsync(customerDto.Name);
         return customerIdResult.Success ? Results.Created("/api/customers", customerIdResult.Value) : Results.Conflict();
     }
 

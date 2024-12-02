@@ -34,6 +34,7 @@ builder.Host.UseSerilog();
 builder.Services.AddSingleton<IDbConnection>(sp => new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
 builder.Services.AddSingleton<ICustomerFieldRepository, CustomerFieldRepository>();
+builder.Services.AddSingleton<IOrderRepository, OrderRepository>();
 
 builder.Services.AddServicesByReflection(Assembly.GetExecutingAssembly());
 

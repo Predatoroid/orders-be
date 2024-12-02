@@ -1,6 +1,10 @@
-@Orders_HostAddress = http://localhost:5086
+@Orders_HostAddress = http://localhost:5086/api
 
-GET {{Orders_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{Orders_HostAddress}}/customers
+Content-Type: application/json
+
+{
+  "name": "TestUser1"
+}
 
 ###

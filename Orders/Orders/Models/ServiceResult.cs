@@ -7,12 +7,12 @@ public class ServiceResult<TValue>
     /// <summary>
     /// The actual value of the result when it's successful
     /// </summary>
-    public TValue? Value { get; set;  }
+    public TValue? Value { get; }
 
     /// <summary>
     /// The error code when the service result has failed
     /// </summary>
-    private ServiceErrorCode? Error { get; set; }
+    public ServiceErrorCode? Error { get; }
     
     /// <summary>
     /// 

@@ -2,6 +2,7 @@ using System.Data;
 using Dapper;
 using Orders.Abstractions;
 using Orders.Enums;
+using Orders.Models;
 
 namespace Orders.Repositories;
 
@@ -14,17 +15,46 @@ public class CustomerFieldRepository : ICustomerFieldRepository
         _dbConnection = dbConnection;
     }
     
-    public async Task<int> CreateCustomerFieldAsync(FieldTypeEnum fieldTypeId, string description)
+    public async Task<int> CreateCustomerFieldAsync(int customerId, FieldTypeEnum fieldTypeId, string description)
     {
-        const string query = "INSERT INTO CustomerFields (FieldType, Description) VALUES (@FieldType, @Description) RETURNING Id";
-        return await _dbConnection.ExecuteScalarAsync<int>(query, new { FieldType = fieldTypeId, Description = description });
+        const string query = "INSERT INTO CustomerFields (CustomerId, FieldTypeId, Description) VALUES (@CustomerId, @FieldTypeId, @Description) RETURNING Id";
+        return await _dbConnection.ExecuteScalarAsync<int>(query, new { CustomerId = customerId, FieldTypeId = fieldTypeId, Description = description });
     }
     
-    // public async Task<Customer> GetCustomerAsync(int id)
-    // {
-    //     const string query = "SELECT * FROM Customers WHERE Id = @Id";
-    //     return await _dbConnection.QuerySingleAsync<Customer>(query, new { Id = id });
-    // }
+    public async Task<CustomerField> GetCustomerFieldAsync(int id)
+    {
+        const string query = "SELECT * FROM CustomerFields WHERE Id = @Id";
+        return await _dbConnection.QuerySingleAsync<CustomerField>(query, new { Id = id });
+    }
+    
+    public async Task<int> CreateCustomerFieldOptionAsync(int customerFieldId, string optionValue)
+    {
+        const string query = "INSERT INTO FieldOptions (CustomerFieldId, OptionValue) VALUES (@CustomerFieldId, @OptionValue) RETURNING Id";
+        return await _dbConnection.ExecuteScalarAsync<int>(query, new { CustomerFieldId = customerFieldId, OptionValue = optionValue });
+    }
+    
+    public async Task<int> CreateCustomerFieldValueAsync(int customerFieldId, int fieldOptionId)
+    {
+        const string query = "INSERT INTO CustomerFieldValues (CustomerFieldId, FieldOptionId) VALUES (@CustomerFieldId, @FieldOptionId) RETURNING Id";
+        return await _dbConnection.ExecuteScalarAsync<int>(query, new { CustomerFieldId = customerFieldId, FieldOptionId = fieldOptionId });
+    }
+
+    public async Task UpdateCustomerFieldAsync(int customerFieldId, string description)
+    {
+        const string query = "UPDATE CustomerFields SET description = @Description WHERE Id = @Id";
+        await _dbConnection.ExecuteAsync(query, new { Id = customerFieldId, Description = description });
+    }
+
+    public Task UpdateCustomerFieldOptionAsync(int fieldOptionId, string optionValue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<int> CreateCustomerFieldHistoryAsync(int entityId, EntityTypeEnum entityTypeId, string oldValue, string newValue)
+    {
+        const string query = "INSERT INTO CustomerFieldHistory (EntityId, EntityTypeId, OldValue, NewValue) VALUES (@EntityId, @EntityTypeId, @OldValue, @NewValue) RETURNING Id";
+        return await _dbConnection.ExecuteScalarAsync<int>(query, new { EntityId = entityId, EntityTypeId = entityTypeId, OldValue = oldValue, NewValue = newValue });
+    }
 
     // public async Task<int> CreateCustomFieldAsync(int customerId, string fieldType, string fieldName)
     // {
