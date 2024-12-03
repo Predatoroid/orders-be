@@ -1,5 +1,4 @@
 using System.Data;
-using System.Data.SqlClient;
 using System.Reflection;
 using Npgsql;
 using Orders.Abstractions;
@@ -9,28 +8,27 @@ using Orders.Repositories;
 using Prometheus;
 using Serilog;
 using Serilog.Sinks.Graylog;
-
+using Serilog.Sinks.Graylog.Core.Transport;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose() 
     .Enrich.WithEnvironmentName()
     .Enrich.WithMachineName()
     .Enrich.WithThreadId()
     .WriteTo.Console()
     .WriteTo.Graylog(new GraylogSinkOptions
     {
-        HostnameOrAddress = "graylog",
+        HostnameOrAddress = "localhost",
         Port = 12201,
         Facility = "MinimalAPI",
-        MinimumLogEventLevel = Serilog.Events.LogEventLevel.Information
+        TransportType = TransportType.Tcp
     })
     .CreateLogger();
 
 builder.Host.UseSerilog();
 
-// builder.Services.AddScoped<IDbConnection>(sp =>
-//     new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSingleton<IDbConnection>(sp => new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
 builder.Services.AddSingleton<ICustomerFieldRepository, CustomerFieldRepository>();
