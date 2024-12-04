@@ -1,8 +1,10 @@
 # FlexERP
 This project is a Web API built using **.NET 8**, designed for managing orders, discounts, and dynamic customer fields. The API includes the following features:
 
-- **Order management with discounts**: View orders while applying discounts.
-- **Dynamic customer fields**: Add custom fields to customer tabs, allowing dynamic field types like text boxes or dropdown options.
+- **Order management with discounts**: View orders while applying discounts. Below you can see the class diagram:
+  ![Class diagram](https://github.com/Predatoroid/orders-be/blob/main/Architecture/orders.drawio.png)
+- **Dynamic customer fields**: Add custom fields to customer tabs, allowing dynamic field types like text boxes or dropdown options. Below you can see the database schema:
+  ![Customer Fields Schema](https://github.com/Predatoroid/orders-be/blob/main/Architecture/schema.drawio.png)
 
 ## Technologies Used
 
@@ -49,8 +51,6 @@ This will start the following services:
 
 ### 3. Database Setup
 Make sure your PostgreSQL instance has been initialized (`Database/schema.sql`) with the required schema by running any necessary SQL migration scripts. You can also configure this to run automatically through Podman with volumes.
-Below is the database diagram regarding the `Customer Fields` feature:
-![Customer Fields Schema](https://github.com/Predatoroid/orders-be/blob/main/Architecture/schema.drawio.png)
 
 ### 4. Configure Graylog
 - Open Graylog at http://127.0.0.1:9000/
