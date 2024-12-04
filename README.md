@@ -2,9 +2,16 @@
 This project is a Web API built using **.NET 8**, designed for managing orders, discounts, and dynamic customer fields. The API includes the following features:
 
 - **Order management with discounts**: View orders while applying discounts. Below you can see the class diagram:
-  ![Class diagram](https://github.com/Predatoroid/orders-be/blob/main/Architecture/orders.drawio.png)
+
+<p align="center">
+	<img alt="Class diagram" src="https://github.com/Predatoroid/orders-be/blob/main/Architecture/orders.drawio.png">
+</p>
+
 - **Dynamic customer fields**: Add custom fields to customer tabs, allowing dynamic field types like text boxes or dropdown options. Below you can see the database schema:
-  ![Customer Fields Schema](https://github.com/Predatoroid/orders-be/blob/main/Architecture/schema.drawio.png)
+
+<p align="center">
+	<img alt="Customer Fields Schema" src="https://github.com/Predatoroid/orders-be/blob/main/Architecture/schema.drawio.png">
+</p>
 
 ## Technologies Used
 
