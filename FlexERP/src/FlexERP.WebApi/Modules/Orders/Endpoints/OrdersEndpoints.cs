@@ -7,7 +7,8 @@ public static class OrdersEndpoints
 {
     public static void MapOrderEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/orders");
+        var group = app.MapGroup("/api/orders")
+            .WithTags("Orders");
 
         group.MapGet("/{orderId:int}", GetOrder)
             .WithName("GetOrder")

@@ -9,7 +9,8 @@ public static class CustomersEndpoints
 {
     public static void MapCustomerEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/customers");
+        var group = app.MapGroup("/api/customers")
+            .WithTags("Customers");
 
         group.MapPost("/", CreateCustomer)
             .WithName("CreateCustomer")
@@ -34,7 +35,7 @@ public static class CustomersEndpoints
             .WithName("GetCustomerField");
         
         group.MapGet("/{fieldId:int}/history", GetCustomerFieldHistory)
-            .WithName("GetCustomerField");
+            .WithName("GetCustomerFieldHistory");
 
         group.MapPost("/{fieldId:int}/options", CreateCustomerFieldOption)
             .WithName("CreateCustomerFieldOption");
