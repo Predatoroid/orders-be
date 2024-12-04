@@ -56,6 +56,25 @@ public class CustomerFieldService : ICustomerFieldService
         return new ServiceResult<CustomerField>(customerField);
     }
     
+    public async Task<ServiceResult<IEnumerable<CustomerFieldHistory>>> GetCustomerFieldHistoryAsync(int customerFieldId)
+    {
+        Log.Information("Getting customer field history with id {Id}", customerFieldId);
+
+        IEnumerable<CustomerFieldHistory> customerFieldHistoryRecords;
+        try
+        {
+            var customerFieldHistoryRecordsDao = await _customerFieldRepository.GetCustomerFieldHistoryAsync(customerFieldId);
+            customerFieldHistoryRecords = customerFieldHistoryRecordsDao.Select(CustomerFieldHistory.FromDao).ToList();
+        }
+        catch (Exception)
+        {
+            Log.Warning("Couldn't get customer field with {Id}", customerFieldId);
+            return new ServiceResult<IEnumerable<CustomerFieldHistory>>(ServiceErrorCode.GenericError);
+        }
+
+        return new ServiceResult<IEnumerable<CustomerFieldHistory>>(customerFieldHistoryRecords);
+    }
+    
     public async Task<ServiceResult<int>> CreateCustomerFieldOptionAsync(int customerFieldId, string optionValue)
     {
         int customerFieldOptionId;

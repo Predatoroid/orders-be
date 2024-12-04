@@ -28,6 +28,12 @@ public class CustomerFieldRepository : ICustomerFieldRepository
         return await _dbConnection.QuerySingleAsync<CustomerFieldDao>(query, new { Id = id });
     }
     
+    public async Task<IEnumerable<CustomerFieldHistoryDao>> GetCustomerFieldHistoryAsync(int id)
+    {
+        const string query = "SELECT * FROM CustomerFieldHistory WHERE Id = @Id";
+        return await _dbConnection.QueryAsync<CustomerFieldHistoryDao>(query, new { Id = id });
+    }
+    
     public async Task<int> CreateCustomerFieldOptionAsync(int customerFieldId, string optionValue)
     {
         const string query = "INSERT INTO FieldOptions (CustomerFieldId, OptionValue) VALUES (@CustomerFieldId, @OptionValue) RETURNING Id";

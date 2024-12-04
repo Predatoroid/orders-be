@@ -32,6 +32,9 @@ public static class CustomersEndpoints
 
         group.MapGet("/{fieldId:int}", GetCustomerField)
             .WithName("GetCustomerField");
+        
+        group.MapGet("/{fieldId:int}/history", GetCustomerFieldHistory)
+            .WithName("GetCustomerField");
 
         group.MapPost("/{fieldId:int}/options", CreateCustomerFieldOption)
             .WithName("CreateCustomerFieldOption");
@@ -80,6 +83,12 @@ public static class CustomersEndpoints
     {
         var customerFieldResult = await customerFieldService.GetCustomerFieldAsync(id);
         return customerFieldResult.Success ? Results.Ok(customerFieldResult.Value) : Results.NotFound();
+    }
+    
+    private static async Task<IResult> GetCustomerFieldHistory(int id, [FromServices] ICustomerFieldService customerFieldService)
+    {
+        var customerFieldHistoryResult = await customerFieldService.GetCustomerFieldHistoryAsync(id);
+        return customerFieldHistoryResult.Success ? Results.Ok(customerFieldHistoryResult.Value) : Results.NotFound();
     }
     
     private static async Task<IResult> CreateCustomerFieldOption(int fieldId, string optionValue, [FromServices] ICustomerFieldService customerFieldService)
